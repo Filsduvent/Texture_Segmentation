@@ -3,6 +3,8 @@ import numpy as np
 import matplotlib.pyplot as plt
 import os
 from filters.filter_bank import get_filters
+from features import extract_texture_features
+
 
 def load_image(path):
     img = cv2.imread(path, cv2.IMREAD_GRAYSCALE)
@@ -49,3 +51,14 @@ if __name__ == "__main__":
     filters = get_filters()
     filtered_results = apply_filters(scales, filters)
     show_filtered_results(scales, filtered_results)
+    
+    print("Type of filtered_results:", type(filtered_results))
+    print("Length:", len(filtered_results))
+    print("First element type:", type(filtered_results[0]) if len(filtered_results) > 0 else "Empty list")
+
+
+    feature_matrix, (H, W) = extract_texture_features(filtered_results, win_size=7)
+
+    #feature_matrix, (H, W) = extract_texture_features(filtered_results)
+print("Feature matrix shape:", feature_matrix.shape)  # Expect: (num_pixels, num_features)
+

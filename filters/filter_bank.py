@@ -6,7 +6,7 @@ def get_filters(size=15):
     filters = {}
 
     # Horizontal (detects vertical edges)
-    filters['horizontal'] = np.array([[1]*size, [-1]*size])
+    filters['horizontal'] = np.array([[1, 1, 1], [0, 0, 0], [-1, -1, -1]]) #np.array([[1]*size, [-1]*size])
 
     # Vertical (detects horizontal edges)
     filters['vertical'] = filters['horizontal'].T
