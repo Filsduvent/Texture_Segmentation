@@ -4,6 +4,8 @@ import matplotlib.pyplot as plt
 import os
 from filters.filter_bank import get_filters
 from features import extract_texture_features
+from clustering import segment_with_kmeans, labels_to_image
+from utils import show_segmented_image, save_segmented_image
 
 
 def load_image(path):
@@ -42,7 +44,7 @@ def show_filtered_results(scales, filtered):
 
 if __name__ == "__main__":
     # Replace this path with any one of your 16 urban images
-    img_path = 'data/urban_images/urban_1.jpeg'  # example path
+    img_path = 'data/urban_images/urban_9.jpeg'  # example path
     if not os.path.exists(img_path):
         raise FileNotFoundError(f"Image not found: {img_path}")
 
@@ -51,7 +53,7 @@ if __name__ == "__main__":
     filters = get_filters()
     filtered_results = apply_filters(scales, filters)
     show_filtered_results(scales, filtered_results)
-    
+
     print("Type of filtered_results:", type(filtered_results))
     print("Length:", len(filtered_results))
     print("First element type:", type(filtered_results[0]) if len(filtered_results) > 0 else "Empty list")
@@ -61,4 +63,16 @@ if __name__ == "__main__":
 
     #feature_matrix, (H, W) = extract_texture_features(filtered_results)
 print("Feature matrix shape:", feature_matrix.shape)  # Expect: (num_pixels, num_features)
+
+
+# Step 1: K-means clustering
+labels = segment_with_kmeans(feature_matrix, n_clusters=3)
+
+# Step 2: Reshape to image
+segmented_img = labels_to_image(labels, (H, W))
+
+# Step 3: Visualize and Save
+show_segmented_image(segmented_img)
+save_segmented_image(segmented_img, path='data/results/segmented_kmeans.png')
+
 
