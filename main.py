@@ -4,8 +4,9 @@ import matplotlib.pyplot as plt
 import os
 from filters.filter_bank import get_filters
 from features import extract_texture_features
-from clustering import segment_with_kmeans, labels_to_image
-from utils import show_segmented_image, save_segmented_image
+from clustering import apply_kmeans
+from utils import show_segmented_image, show_image_Colored_and_gray
+
 
 
 def load_image(path):
@@ -43,36 +44,51 @@ def show_filtered_results(scales, filtered):
         plt.show()
 
 if __name__ == "__main__":
-    # Replace this path with any one of your 16 urban images
-    img_path = 'data/urban_images/urban_9.jpeg'  # example path
-    if not os.path.exists(img_path):
-        raise FileNotFoundError(f"Image not found: {img_path}")
+  
+    images_dir = "data/urban_images/"
 
-    image = load_image(img_path)
-    scales = generate_scales(image)
-    filters = get_filters()
-    filtered_results = apply_filters(scales, filters)
-    show_filtered_results(scales, filtered_results)
+    images = sorted([f for f in os.listdir(images_dir) if f.endswith('.jpeg' or 'jpg')])
 
-    print("Type of filtered_results:", type(filtered_results))
-    print("Length:", len(filtered_results))
-    print("First element type:", type(filtered_results[0]) if len(filtered_results) > 0 else "Empty list")
+    for img_name in images:
+        print(img_name)
+        path = os.path.join(images_dir, img_name)
+        image = cv2.imread(path, cv2.IMREAD_GRAYSCALE)
 
 
-    feature_matrix, (H, W) = extract_texture_features(filtered_results, win_size=7)
+        # image = load_image(img_path)
+        scales = generate_scales(image)
+        filters = get_filters()
+        filtered_results = apply_filters(scales, filters)
+        show_filtered_results(scales, filtered_results)
 
-    #feature_matrix, (H, W) = extract_texture_features(filtered_results)
-print("Feature matrix shape:", feature_matrix.shape)  # Expect: (num_pixels, num_features)
+        print("Type of filtered_results:", type(filtered_results))
+        print("Length:", len(filtered_results))
+        print("First element type:", type(filtered_results[0]) if len(filtered_results) > 0 else "Empty list")
 
 
-# Step 1: K-means clustering
-labels = segment_with_kmeans(feature_matrix, n_clusters=3)
+        feature_matrix, (H, W) = extract_texture_features(filtered_results, win_size=32)
 
-# Step 2: Reshape to image
-segmented_img = labels_to_image(labels, (H, W))
+        #feature_matrix, (H, W) = extract_texture_features(filtered_results)
+        print("Feature matrix shape:", feature_matrix.shape)  # Expect: (num_pixels, num_features)
 
-# Step 3: Visualize and Save
-show_segmented_image(segmented_img)
-save_segmented_image(segmented_img, path='data/results/segmented_kmeans.png')
+
+        # Step 1: K-means clustering
+        #labels = segment_with_kmeans(feature_matrix, n_clusters=3)
+
+        # Step 2: Reshape to image
+        #segmented_img = labels_to_image(labels, (H, W))
+
+        segmented_image_color, segmented_image_gray = apply_kmeans(feature_matrix,image.shape,n_clusters = 3)
+
+        show_image_Colored_and_gray(image,segmented_image_color, segmented_image_gray, img_name)
+
+        # Step 3: Visualize and Save
+       # show_segmented_image(segmented_img)
+        #save_segmented_image(segmented_img, path='data/results/segmented_kmeans.png')
+
+        # Build Gabor filters and apply them
+        #gabor_filters = build_filters_Gabor(ksize=15)
+        #filtered_results = apply_filters_to_scales(gray_image, gabor_filters, scales=3)
+
 
 
