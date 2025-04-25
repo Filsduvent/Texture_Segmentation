@@ -1,2 +1,2 @@
 *.pyc\n__pycache__/\nvenv/
-data/urban_images/*
+data/*

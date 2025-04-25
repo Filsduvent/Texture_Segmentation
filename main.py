@@ -8,7 +8,8 @@ from clustering import apply_kmeans
 from utils import show_segmented_image, show_image_Colored_and_gray
 
 
-
+if not os.path.exists('data/output'):
+    os.makedirs('data/output')
 def load_image(path):
     img = cv2.imread(path, cv2.IMREAD_GRAYSCALE)
     return img
@@ -42,6 +43,24 @@ def show_filtered_results(scales, filtered):
             plt.axis('off')
         plt.tight_layout()
         plt.show()
+        
+def save_filtered_results(scales, filtered, img_name):
+    for i, (scale_img, scale_result) in enumerate(zip(scales, filtered)):
+        plt.figure(figsize=(12, 6))
+        plt.suptitle(f'Scale {i+1}', fontsize=16)
+        for j, (name, result) in enumerate(scale_result.items()):
+            plt.subplot(2, 3, j+1)
+            plt.imshow(result, cmap='gray')
+            plt.title(name)
+            plt.axis('off')
+        
+        # Sauvegarder au lieu d'afficher
+        base_name = os.path.splitext(img_name)[0]
+        output_path = f"data/output/{base_name}_scale_{i+1}_filters.png"
+        plt.tight_layout()
+        plt.savefig(output_path)
+        plt.close()
+        print(f"Saved filtered results to {output_path}")
 
 if __name__ == "__main__":
   
@@ -59,7 +78,8 @@ if __name__ == "__main__":
         scales = generate_scales(image)
         filters = get_filters()
         filtered_results = apply_filters(scales, filters)
-        show_filtered_results(scales, filtered_results)
+        # show_filtered_results(scales, filtered_results)
+        save_filtered_results(scales, filtered_results, img_name)
 
         print("Type of filtered_results:", type(filtered_results))
         print("Length:", len(filtered_results))
@@ -80,7 +100,23 @@ if __name__ == "__main__":
 
         segmented_image_color, segmented_image_gray = apply_kmeans(feature_matrix,image.shape,n_clusters = 3)
 
-        show_image_Colored_and_gray(image,segmented_image_color, segmented_image_gray, img_name)
+        # show_image_Colored_and_gray(image,segmented_image_color, segmented_image_gray, img_name)
+        
+        # Save img segmentation results
+        base_name = os.path.splitext(img_name)[0]
+        
+        # original Image
+        cv2.imwrite(f"data/output/{base_name}_original.png", image)
+        
+        # color image segmented
+        cv2.imwrite(f"data/output/{base_name}_segmented_color.png", cv2.cvtColor(segmented_image_color, cv2.COLOR_RGB2BGR))
+        
+        # raw image segmented
+        cv2.imwrite(f"data/output/{base_name}_segmented_gray.png", segmented_image_gray)
+        
+        print(f"Saved segmentation results for {img_name}")
+
+print("All processing complete. Results saved in data/output/ directory.")
 
         # Step 3: Visualize and Save
        # show_segmented_image(segmented_img)
