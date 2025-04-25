@@ -49,7 +49,24 @@ K-Means Clustering: Groups pixels based on their texture feature vectors.
 The method produced coherent and visually meaningful segmentations across various urban scenes. Homogeneous regions like the sky were successfully distinguished from highly textured regions such as buildings and cars. While larger patterns were clearly segmented, finer details sometimes merged into broader clusters due to the averaging process. Adjusting the number of clusters or window size allows for control over segmentation granularity.
 
 <p align="center">
-  <img src="data/output/urban0_original.png/img1.png" width="50%" />
-  <img src="data/output/urban0_segmented_color.pngimg2.png" width="50%" />
-   <img src="data/output/urban0_segmented_color.pngimg2.png" width="50%" />
+  <img src="data/output/urban_2_original.png" width="30%" alt="original image" />
+  <img src="data/output/urban_2_segmented_color.png" width="30%"lt="segmented image" />
+</p>
+
+<p align="center">
+  <img src="data/output/urban_11_original.png" width="30%" alt="original image" />
+  <img src="data/output/urban_11_segmented_color.png" width="30%"lt="segmented image" />
+</p>
+
+<p align="center">
+  <img src="data/output/urban_14_original.png" width="30%" alt="original image" />
+  <img src="data/output/urban_14_segmented_color.png" width="30%"lt="segmented image" />
+</p>
+<p align="center">
+  <img src="data/output/urban_16_original.png" width="30%" alt="original image" />
+  <img src="data/output/urban_16_segmented_color.png" width="30%"lt="segmented image" />
+</p>
+<p align="center">
+  <img src="data/output/urban_23_original.png" width="30%" alt="original image" />
+  <img src="data/output/urban_23_segmented_color.png" width="30%"lt="segmented image" />
 </p>
